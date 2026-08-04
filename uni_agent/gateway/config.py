@@ -31,6 +31,11 @@ class GatewayActorConfig:
             The gateway enforces their sum when both values are set.
         enable_last_assistant_rollback: Whether latest-assistant rewrites may
             rollback and reuse an existing chain. Enabled by default.
+        enable_prefix_caching: When True, the GatewayActor routes all requests
+            from the same session to the same vLLM worker so that vLLM's
+            built-in ``--enable-prefix-caching`` can reuse the shared prompt
+            prefix KV-cache across turns.  Requires vLLM to be launched with
+            ``--enable-prefix-caching``.  Default: False.
     """
 
     tokenizer: Any
@@ -43,6 +48,7 @@ class GatewayActorConfig:
     prompt_length: int | None = None
     response_length: int | None = None
     enable_last_assistant_rollback: bool = True
+    enable_prefix_caching: bool = False
 
     def __post_init__(self) -> None:
         if type(self.enable_last_assistant_rollback) is not bool:

@@ -80,7 +80,13 @@ class _GatewayActor:
         self._prompt_length = config.prompt_length
         self._response_length = config.response_length
         self._enable_last_assistant_rollback = config.enable_last_assistant_rollback
+        self._enable_prefix_cache = config.enable_prefix_caching
         self._sessions: dict[str, GatewaySession] = {}
+        # Prefix KV-cache: session_id → worker_id affinity.
+        # Ensures all turns in a session hit the same vLLM worker so
+        # vLLM's built-in --enable-prefix-caching can reuse the shared
+        # prompt prefix KV-cache across turns.
+        self._session_workers: dict[str, int] = {}
         self._app = FastAPI()
         self._server_port: int | None = None
         self._server_task: asyncio.Task | None = None
@@ -158,6 +164,28 @@ class _GatewayActor:
             raise KeyError(f"Unknown session_id: {session_id}")
         return session
 
+    def _get_worker_for_session(self, session_id: str) -> int | None:
+        """Return the vLLM worker_id for this session, or None if disabled.
+
+        When prefix caching is enabled, assigns a worker on first call and
+        returns the same worker for subsequent calls.  Uses hash of session_id
+        to pick a worker deterministically; the backend's worker_count is
+        probed via ``getattr`` so no changes are required in verl.
+
+        Returns None when prefix caching is disabled — the backend handles
+        worker selection on its own.
+        """
+        if not self._enable_prefix_cache:
+            return None
+
+        if session_id in self._session_workers:
+            return self._session_workers[session_id]
+
+        worker_count = getattr(self._backend, "worker_count", 1)
+        worker_id = hash(session_id) % worker_count
+        self._session_workers[session_id] = worker_id
+        return worker_id
+
     async def _handle_openai_chat_completions(
         self,
         session_id: str,
@@ -178,7 +206,10 @@ class _GatewayActor:
         except MalformedRequestError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-        outcome = await session.run_generation(internal, self._backend)
+        outcome = await session.run_generation(
+            internal, self._backend,
+            worker_id=self._get_worker_for_session(session_id),
+        )
         model = str(payload.get("model") or "unknown")
         if payload.get("stream") is True:
             return openai_stream_response(outcome, model=model)
@@ -204,7 +235,10 @@ class _GatewayActor:
         except MalformedRequestError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-        outcome = await session.run_generation(internal, self._backend)
+        outcome = await session.run_generation(
+            internal, self._backend,
+            worker_id=self._get_worker_for_session(session_id),
+        )
         model = str(payload.get("model") or "unknown")
         if payload.get("stream") is True:
             return anthropic_stream_response(outcome, model=model)
@@ -281,6 +315,22 @@ class _GatewayActor:
         """Return a snapshot of a live session's state."""
         session = self._get_session(session_id)
         return session.snapshot_state()
+
+    async def clear_prefix_cache(self) -> None:
+        """Clear all session→worker affinities.
+
+        Called after verl updates rollout weights — all cached KV computed
+        with old weights is stale.  The next request for each session will
+        be assigned a fresh worker.
+        """
+        count = len(self._session_workers)
+        self._session_workers.clear()
+        if count > 0:
+            logger.info(
+                "prefix_cache: cleared %d session→worker affinities "
+                "(rollout weights updated)",
+                count,
+            )
 
 
 GatewayActor = ray.remote(_GatewayActor)

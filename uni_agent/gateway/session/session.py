@@ -217,7 +217,9 @@ class GatewaySession:
         """Return a copy of the trusted per-session sampling defaults."""
         return dict(self._sampling_params)
 
-    async def run_generation(self, request: InternalGenerationRequest, backend) -> GenerationOutcome:
+    async def run_generation(
+        self, request: InternalGenerationRequest, backend, *, worker_id: int | None = None
+    ) -> GenerationOutcome:
         """Run one provider-normalized generation request and return its business outcome.
 
         The backend is passed in for this call only; the session does not own the
@@ -226,6 +228,13 @@ class GatewaySession:
         wire payloads. Protocol capability checks happen in the actor before
         this method, while backend errors are converted into HTTP exceptions
         here.
+
+        Args:
+            request: Canonical generation request lowered by provider adapter.
+            backend: LLM backend client (LLMServerClient from verl).
+            worker_id: Optional vLLM worker hint for prefix KV-cache affinity.
+                When set, the backend should route this request to the specified
+                worker.  None means the backend chooses automatically.
         """
         # Same-session requests overlap backend generation and commit in backend
         # completion order. The framework currently scores session_trajectories[-1]
@@ -257,13 +266,16 @@ class GatewaySession:
                     reserved_chain_id = encoded.chain_id
 
             try:
-                output = await backend.generate(
-                    request_id=self.handle.session_id,
-                    prompt_ids=encoded.context_ids,
-                    sampling_params=encoded.sampling_params,
-                    image_data=encoded.image_data,
-                    video_data=encoded.video_data,
-                )
+                generate_kwargs: dict[str, Any] = {
+                    "request_id": self.handle.session_id,
+                    "prompt_ids": encoded.context_ids,
+                    "sampling_params": encoded.sampling_params,
+                    "image_data": encoded.image_data,
+                    "video_data": encoded.video_data,
+                }
+                if worker_id is not None:
+                    generate_kwargs["worker_id"] = worker_id
+                output = await backend.generate(**generate_kwargs)
             except ValueError as e:
                 raise HTTPException(status_code=400, detail=str(e)) from e
             except Exception as e:
