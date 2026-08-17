@@ -44,6 +44,15 @@ def kaiming_uniform_(tensor: ms.Tensor, a=0.0, mode="fan_in", nonlinearity="leak
     tensor.set_data(initializer(HeUniform(a, mode, nonlinearity), tensor.shape, tensor.dtype))
 
 
+DEFAULT_LORA = "DEFAULT"
+
+
+def copy_parameters(src_cell, dst_cell):
+    """将 src_cell 的参数拷贝到 dst_cell，用于静态图下 LoRA 热切换。"""
+    for src_p, dst_p in zip(src_cell.get_parameters(), dst_cell.get_parameters()):
+        dst_p.set_data(src_p.copy())
+
+
 class LoraLayer(BaseTunerLayer):
     # All names of layers that may contain (trainable) adapter weights
     adapter_layer_names = ("lora_A", "lora_B")
@@ -185,6 +194,10 @@ class LoraLayer(BaseTunerLayer):
         else:
             self.use_dora[adapter_name] = False
 
+        # 静态图下首次创建 LoRA 层时，同时创建一个 DEFAULT_LORA 占位层用于后续热切换
+        if DEFAULT_LORA not in self.lora_A:
+            self.update_layer(DEFAULT_LORA, r, lora_alpha, lora_dropout, init_lora_weights, use_rslora)
+
         self.set_adapter(self.active_adapters)
 
     def reset_lora_parameters(self, adapter_name, init_lora_weights):
@@ -301,6 +314,25 @@ class LoraLayer(BaseTunerLayer):
                 self.scaling[active_adapter] = self.lora_alpha[active_adapter] / self.r[active_adapter]
             else:
                 self.scaling[active_adapter] /= scale
+
+    def set_adapter(self, adapter_names: Union[str, list[str]]) -> None:
+        """设置当前激活的 LoRA adapter。
+
+        在静态图模式下，通过 DEFAULT_LORA 占位层实现参数拷贝，避免触发图重编译。
+        在动态图模式下，直接使用父类原始逻辑。
+        """
+        if ms.get_context("mode") != ms.GRAPH_MODE or DEFAULT_LORA not in self.lora_A:
+            super().set_adapter(adapter_names)
+            return
+
+        src_adapter_name = adapter_names if isinstance(adapter_names, str) else adapter_names[0]
+        super().set_adapter(DEFAULT_LORA)
+
+        # 只支持单 LoRA，将源 adapter 参数拷贝到 DEFAULT_LORA 占位层
+        copy_parameters(self.lora_A[src_adapter_name], self.lora_A[DEFAULT_LORA])
+        copy_parameters(self.lora_B[src_adapter_name], self.lora_B[DEFAULT_LORA])
+        copy_parameters(self.lora_dropout[src_adapter_name], self.lora_dropout[DEFAULT_LORA])
+        self.scaling[DEFAULT_LORA] = self.scaling[src_adapter_name]
 
     def peft_parameters_and_names(self, name_prefix: str = "") -> Iterable[Tuple[str, ms.Parameter]]:
         assert isinstance(self, nn.Cell), f"{self.__class__.__name__} is not a nn.Cell"
@@ -678,6 +710,10 @@ class _ConvNd(nn.Cell, LoraLayer):
             self.use_dora[adapter_name] = True
         else:
             self.use_dora[adapter_name] = False
+
+        # 静态图下首次创建 LoRA 层时，同时创建一个 DEFAULT_LORA 占位层用于后续热切换
+        if DEFAULT_LORA not in self.lora_A:
+            self.update_layer(DEFAULT_LORA, r, lora_alpha, lora_dropout, init_lora_weights, use_rslora, use_dora=False, lora_bias=False)
 
         self.set_adapter(self.active_adapters)
 
