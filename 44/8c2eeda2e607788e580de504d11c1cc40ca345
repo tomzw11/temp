@@ -1,0 +1,137 @@
+tests/uni_agent/agents/qwenpaw/mock_service.py
+  s_0d0049ccb19e58::t_bd6807cde7d42e 1-141
+uni_agent/agents/qwenpaw/streaming.py
+  s_0d0049ccb19e58::t_96cca10b867fdf 1-138
+uni_agent/agents/qwenpaw/__init__.py
+  s_0d0049ccb19e58::t_4badc522bc63fc 23-25
+  s_0d0049ccb19e58::t_3d2975107f6295 26-44
+  s_0d0049ccb19e58::t_7c5da179ec6bfe 20-22
+  s_0d0049ccb19e58::t_88a7e8772ac3e6 17-19
+  s_0d0049ccb19e58::t_0253a4462c3bc0 14-16
+tests/uni_agent/agents/qwenpaw/test_retry.py
+  s_0d0049ccb19e58::t_807251f0ca1c18 1-114
+tests/uni_agent/agents/qwenpaw/test_reward.py
+  s_0d0049ccb19e58::t_061a1c3bccc459 1-103
+uni_agent/agents/qwenpaw/prefix_cache.py
+  s_0d0049ccb19e58::t_855ee7724c5317 1,11-47,78-79,101,122-131,136-140,142-143
+  s_0d0049ccb19e58::t_35dbb2646706f1 2-10,132-135,141
+  s_0d0049ccb19e58::t_e9616077a64d40 48-77,80-100,102-121
+uni_agent/agents/qwenpaw/agent.py
+  s_0d0049ccb19e58::t_6f6d9564b2decd 352-354
+  s_0d0049ccb19e58::t_84ca15434cef51 381
+  s_0d0049ccb19e58::t_b319195a480ed1 267
+  s_0d0049ccb19e58::t_34f7f88292ec8e 92-94
+  s_0d0049ccb19e58::t_70efaace5dbffa 96-121
+  s_0d0049ccb19e58::t_68b916721689a2 79,83,87,91,95,224-266,268-275,307,313,351,380
+  s_0d0049ccb19e58::t_87a9e49eec6520 88-90
+  s_0d0049ccb19e58::t_04215befa039ed 314-350
+  s_0d0049ccb19e58::t_60b0ef8b815a77 355-379
+  s_0d0049ccb19e58::t_62e335203eebb6 62-78
+  s_0d0049ccb19e58::t_686ea6869bf861 276-306
+  s_0d0049ccb19e58::t_469862ca61b745 151-223
+  s_0d0049ccb19e58::t_e0256e53491bda 122-150
+  s_0d0049ccb19e58::t_9c57668164860e 59-61
+  s_0d0049ccb19e58::t_87249ebd500d51 80-82
+  s_0d0049ccb19e58::t_5754d765ddddf9 308-312
+  s_0d0049ccb19e58::t_c04515533ac05f 56-58
+  s_0d0049ccb19e58::t_653cf9ed11de81 84-86
+  s_0d0049ccb19e58::t_fdb02e97365ebe 53-55
+uni_agent/agents/qwenpaw/retry.py
+  s_0d0049ccb19e58::t_c9a446f123658f 1-188
+PR_DESCRIPTION.md
+  s_0d0049ccb19e58::t_b3dec2279d6bae 9-11
+  s_0d0049ccb19e58::t_52dfb87a5c7b8d 16-50
+  s_0d0049ccb19e58::t_a7a586f044d55f 12-14
+  s_0d0049ccb19e58::t_e60e4f17a8d901 156-157
+  s_0d0049ccb19e58::t_d795f2ab48db09 52-95
+  s_0d0049ccb19e58::t_c87de310b5ae65 237,240,243,246,257
+  s_0d0049ccb19e58::t_9d9bf261eb82e2 6-8
+  s_0d0049ccb19e58::t_413d0fc3fe32af 144-145
+  s_0d0049ccb19e58::t_9d101c9054f8a7 97-112
+  s_0d0049ccb19e58::t_68b3503b9a081f 114-122
+  s_0d0049ccb19e58::t_486c3a3cb9f1ba 131,133,135,137,139-141,143,147,149,151-155,158-166,168-169,171-172,174-186,188-195,201-213,216-225,228-236,238-239,241,244,247,249-250,252-253,255,259,261-265
+  s_0d0049ccb19e58::t_e58cf9d29ff60e 15,51,96,113,123-130,132,134,136,138,142,146,148,150,196-200,242,245,248,251,254,256,258,260,266
+  s_0d0049ccb19e58::t_7929bab02f68c3 167,170,173,187
+  s_0d0049ccb19e58::t_17355920884f47 214-215
+  s_0d0049ccb19e58::t_dbfc6cbe345a62 226-227
+  s_0d0049ccb19e58::t_7c619698e2ff07 3-5
+uni_agent/agents/qwenpaw/reward.py
+  s_0d0049ccb19e58::t_fc259ad5426efb 1-155
+uni_agent/gateway/gateway.py
+  s_0d0049ccb19e58::t_feee1447c7e5bb 83,85-89
+  s_0d0049ccb19e58::t_c07030053682fd 167-188
+  s_0d0049ccb19e58::t_133eaf844bc79d 209-212
+  s_0d0049ccb19e58::t_553562900832ee 238-241
+  s_0d0049ccb19e58::t_7703b654b0bddb 319-334
+uni_agent/gateway/session/session.py
+  s_0d0049ccb19e58::t_b0ac8ff88120f5 220-222,231-237
+  s_0d0049ccb19e58::t_bd751a37de039d 269-278
+tests/uni_agent/agents/qwenpaw/test_client.py
+  s_0d0049ccb19e58::t_8d5866cae09942 1-83
+uni_agent/agents/qwenpaw/agent.md
+  s_0d0049ccb19e58::t_ca582c6168ccb9 47-51
+  s_0d0049ccb19e58::t_cc87561a32d357 83-85
+  s_0d0049ccb19e58::t_2c7163f837e54c 60-64
+  s_0d0049ccb19e58::t_7287ca83a52c44 146-153
+  s_0d0049ccb19e58::t_bd5167a63c68e5 7,33,35,39-40,46,52,59,65,68,72,82,86,92,98,106,110,113,125,137,141-143,145,154,156,162,169,171,181,185,198-203,205,207,209,211,213,215,223,225-232
+  s_0d0049ccb19e58::t_b5c1b91990edf1 204,206,208,210,212,214,216-222,224
+  s_0d0049ccb19e58::t_b4c4f50e03e773 41-45
+  s_0d0049ccb19e58::t_423577deb50981 73-81
+  s_0d0049ccb19e58::t_8b69b0e94a5fd1 69-71
+  s_0d0049ccb19e58::t_c5288aa2338ace 34
+  s_0d0049ccb19e58::t_fa47f7bafc5d01 155
+  s_0d0049ccb19e58::t_da419a00e307b9 144
+  s_0d0049ccb19e58::t_e9832cdc52442b 8-32
+  s_0d0049ccb19e58::t_0d8820d28b18bf 53-58
+  s_0d0049ccb19e58::t_4375e6ddd3a33a 186-197
+  s_0d0049ccb19e58::t_b9bbebde58dca5 182-184
+  s_0d0049ccb19e58::t_778efc2ab892f2 111-112
+  s_0d0049ccb19e58::t_d5c3ba5702c732 170
+  s_0d0049ccb19e58::t_5ba29ac90a7c6c 107-109
+  s_0d0049ccb19e58::t_e5505af0ecaaeb 87-91
+  s_0d0049ccb19e58::t_d95b2e85df4e21 172-180
+  s_0d0049ccb19e58::t_0d81aff0ef5798 36-38
+  s_0d0049ccb19e58::t_31d5a9c76e7693 93-97
+  s_0d0049ccb19e58::t_a538480653af3a 4-6
+  s_0d0049ccb19e58::t_bf29b27fca36c3 114-124
+  s_0d0049ccb19e58::t_0a7ad8c8e0854a 157-161
+  s_0d0049ccb19e58::t_a60f7c5b6560c3 163-168
+  s_0d0049ccb19e58::t_22586547d4a2dc 138-140
+  s_0d0049ccb19e58::t_9d7ed63f45f1a9 99-105
+  s_0d0049ccb19e58::t_2bf786b1dc433b 1-3
+  s_0d0049ccb19e58::t_07a3baa53883b4 126-136
+  s_0d0049ccb19e58::t_4914c9e1595aa3 66-67
+uni_agent/agents/qwenpaw/multi_turn.py
+  s_0d0049ccb19e58::t_047ad5630e0f0d 1-189
+uni_agent/gateway/config.py
+  s_0d0049ccb19e58::t_2254543264ff98 34-38,51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.2",
+  "base_commit_sha": "448c2eeda2e607788e580de504d11c1cc40ca345",
+  "prompts": {},
+  "sessions": {
+    "s_0d0049ccb19e58": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a6c2b0f2968edf67e41ae18",
+        "model": "deepseek-V4-Pro"
+      },
+      "human_author": null,
+      "custom_attributes": {
+        "tool_use_id": "6a872b688f3f074cf553d931",
+        "tool_type": "builtin",
+        "operation_id": "6a872b688f3f074cf553d931",
+        "edit_kind": "file_edit",
+        "runtime_client": "trae-tob-git-ai",
+        "external_session_id": "6a6c2b0f2968edf67e41ae18",
+        "session_id": "6a6c2b0f2968edf67e41ae18",
+        "client_type": "ide",
+        "tool_id": "icube:applyChatSnapshotPatch",
+        "dedupe_key": "6a6c2b0f2968edf67e41ae18:6a872b688f3f074cf553d931:afterEdit:89c3da4c",
+        "source_scene": "agent"
+      }
+    }
+  }
+}
